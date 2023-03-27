@@ -39,17 +39,41 @@
     {% if grade > 80 %}
     <div class="alert alert-success">
        <!--HINT Display passed info -->
+       <div class="alert alert-success">
+        You have passed the exam with a score of {{ score }} out of {{ total }}!
     </div>
-        {% else %}
-        <div class="alert alert-danger">
-            <!--HINT Display failed info -->
-        </div>
-        <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
+    {% else %}
+    <div class="alert alert-danger">
+        You have failed the exam with a score of {{ score }} out of {{ total }}.
+    </div>
+    <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
+    </div>
         {% endif %}
         <div class="card-columns-vertical mt-1">
-        <h5 class="">Exam results</h5>
-            <!--HINT Display exam results-->
+            <h5 class="">Exam results</h5>
+            <ul>
+                {% for question in questions %}
+                <li>
+                    {{ question.question_text }}
+                    <ul>
+                        {% for choice in question.choice_set.all %}
+                        <li {% if choice.correct %}style="color: green;"{% endif %}>
+                            {{ choice.choice_text }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% if question.is_correct %}
+                    <div class="text-success">
+                        Correct!
+                    </div>
+                    {% else %}
+                    <div class="text-danger">
+                        Incorrect.
+                    </div>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-    </div>
 </body>
 </html>
